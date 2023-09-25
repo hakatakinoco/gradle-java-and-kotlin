@@ -1,7 +1,11 @@
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+import org.springframework.boot.gradle.tasks.run.BootRun
+
 plugins {
-	java
 	id("org.springframework.boot") version "3.1.4"
 	id("io.spring.dependency-management") version "1.1.3"
+	kotlin("jvm") version "1.8.22"
+	kotlin("plugin.spring") version "1.8.22"
 }
 
 group = "com.example"
@@ -18,10 +22,25 @@ repositories {
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	// import kotlinlib
-	implementation(project(":kotlinlib"))
 }
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+/* -- ライブリ化設定 -- */
+tasks.named<BootJar>("bootJar") {
+	enabled = false
+}
+tasks.named<BootRun>("bootRun") {
+	enabled = false
+}
+
+tasks.named<Jar>("jar") {
+	archiveClassifier.set("")
+	enabled = true
+}
+
+java {
+	withSourcesJar()
 }
